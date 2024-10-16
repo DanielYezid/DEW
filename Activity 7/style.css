@@ -1,0 +1,16 @@
+.brick {
+    width: 120px;
+    height: 40px;
+    background-color: brown;
+    display: inline-block;
+
+    margin-left: 10px;
+}
+
+#table-container{
+    width: 80%;
+    height: 800px;
+    background-image: url('./img/fondo.jpg');
+    /* display: flex; */
+    gap:0;    
+}
