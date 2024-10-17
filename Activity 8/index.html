@@ -18,6 +18,9 @@
       width: 50px;
       border-radius: 5px;
     }
+    .hidden{
+      display: none;
+    }
   </style>
 </head>
 
@@ -31,10 +34,10 @@
     <li>When 1 audio ends the following one must start playing automatically</li>
   </ul>
 
-  <ol>
-    <li>music1.mp3</li>
-    <li>music2.mp3</li>
-    <li>music3.mp3</li>
+  <ol id="playlist">
+    <li>music1.mp3<i class="fa fa-play"></i></li>
+    <li>music2.mp3<i class="fa fa-play hidden"></i></li>
+    <li>music3.mp3<i class="fa fa-play hidden"></i></li>
   </ol>
   <audio controls="controls" id="audioPlayer">
     <source src="" type="audio/ogg">
@@ -47,8 +50,8 @@
   </div>
 
   <script>
+    //Variable
     const songs = ["Brasil.ogg", "Colombia.ogg", "Espana.ogg"];
-
     const play = document.querySelector('.play');
     const player = document.getElementById('audioPlayer');
     const backward = document.querySelector('.backward');
@@ -58,33 +61,76 @@
 
     player.src = songs[currentSong];
 
-    play.onclick = function () {
+    //Play y Pause
+    play.onclick = function (e) {
       if (player.paused) {
         player.play();
-        document.querySelector('.fa.fa-play').classList.replace('fa-play', 'fa-pause');
+        e.target.classList.replace('fa-play', 'fa-pause');
       } else {
         player.pause();
-        document.querySelector('.fa.fa-pause').classList.replace('fa-pause', 'fa-play');
+        e.target.classList.replace('fa-pause', 'fa-play');
       }
     }
-
-    backward.onclick = function () {
+    //play cancion
+    function playSong(songNumber = 0, forcePlay = false) {
       const paused = player.paused;
+      player.src = songs[songNumber];
+      (!paused || forcePlay) && player.play();
+
+
+      //añadir el incono de play al que este sonando
+      const playIcons = document.querySelectorAll('#playlist li i ,fa-play');
+      playIcons.forEach(playIcon => playIcon.classList.add('hidden'));
+      playIcons[songNumber].classList.remove('hidden');
+    }
+
+    //retroceder
+    backward.onclick = function () {
       --currentSong;
       if (currentSong === -1) {
         currentSong = songs.length - 1;
       }
-      player.src = songs[currentSong];
-      !paused && player.play();
+      playSong(currentSong);
+
     }
 
+    //Avanzar
     forward.onclick = function () {
-      const paused = player.paused;
       currentSong = ++currentSong % songs.length;
-      player.src = songs[currentSong];
-      !paused && player.play();
-
+      playSong(currentSong);
     }
+
+    //Cuando acaba
+    player.onended = function () {
+      currentSong = ++currentSong % songs.length;
+      playSong(currentSong, true)
+    }
+
+
+    //Forma dos
+    // backward.onclick = function () {
+    //   const paused = player.paused;
+    //   --currentSong;
+    //   if (currentSong === -1) {
+    //     currentSong = songs.length - 1;
+    //   }
+    //   player.src = songs[currentSong];
+    //   !paused && player.play();
+    // }
+    // 
+    // forward.onclick = function () {
+    //   const paused = player.paused;
+    //   currentSong = ++currentSong % songs.length;
+    //   player.src = songs[currentSong];
+    //   !paused && player.play();
+    // }
+    // 
+    // player.onended = function () {
+    //   currentSong = ++currentSong % songs.length;
+    //   player.src = songs[currentSong];
+    //   player.play();
+    // }
+
   </script>
 </body>
 

@@ -6,6 +6,3 @@ function checkImg(aux) {
     return img.complete;
 }
 
-
-
-// 
